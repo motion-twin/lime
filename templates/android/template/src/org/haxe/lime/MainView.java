@@ -341,7 +341,12 @@ class MainView extends GLSurfaceView {
 	
 	
 	@Override public boolean onKeyDown (final int inKeyCode, KeyEvent event) {
-		
+		if( !handleKeyDown(inKeyCode,event) )
+ 			return super.onKeyDown(inKeyCode, event);
+ 		return true;
+	}
+	
+	public boolean handleKeyDown( final int inKeyCode, KeyEvent event ){	
 		final MainView me = this;
 		
 		::if (ANDROID_TARGET_SDK_VERSION > 11)::if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1 && (event.isGamepadButton (inKeyCode) || (inKeyCode >= 19 && inKeyCode <= 22))) {
@@ -385,13 +390,18 @@ class MainView extends GLSurfaceView {
 			
 		}
 		
-		return super.onKeyDown (inKeyCode, event);
+		return false;
 		
 	}
 	
 	
 	@Override public boolean onKeyUp (final int inKeyCode, KeyEvent event) {
-		
+		if( !handleKeyUp(inKeyCode,event) )
+ 			return super.onKeyUp(inKeyCode, event);
+ 		return true;
+ 	}
+ 	
+ 	public boolean handleKeyUp (final int inKeyCode, KeyEvent event) {		
 		final MainView me = this;
 		
 		::if (ANDROID_TARGET_SDK_VERSION > 11)::if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1 && (event.isGamepadButton (inKeyCode) || (inKeyCode >= 19 && inKeyCode <= 22))) {
@@ -435,8 +445,7 @@ class MainView extends GLSurfaceView {
 			
 		}
 		
-		return super.onKeyUp (inKeyCode, event);
-		
+		return false;		
 	}
 	
 	

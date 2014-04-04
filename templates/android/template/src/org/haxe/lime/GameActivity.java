@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.KeyEvent;
 import dalvik.system.DexClassLoader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,6 +39,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.List;
+import android.content.ComponentCallbacks2;
+
 import org.haxe.extension.Extension;
 import org.haxe.HXCPP;
 
@@ -75,9 +78,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	public Handler mHandler;
 	
-	private static MainView mMainView;
 	private MainView mView;
 	private Sound _sound;
+	private boolean isPaused;
 	
 	
 	protected void onCreate (Bundle state) {
@@ -88,6 +91,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 		mContext = this;
 		mHandler = new Handler ();
 		mAssets = getAssets ();
+		isPaused = true;
 		
 		Extension.assetManager = mAssets;
 		Extension.callbackHandler = mHandler;
@@ -99,10 +103,11 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 		requestWindowFeature (Window.FEATURE_NO_TITLE);
 		
-		::if WIN_FULLSCREEN::
-			::if (ANDROID_TARGET_SDK_VERSION < 19)::
-				getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
-					| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		::if (ANDROID_TARGET_SDK_VERSION < 19)::
+			::if WIN_FULLSCREEN::
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			::else::
+			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			::end::
 		::end::
 		
@@ -111,31 +116,11 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 		// Pre-load these, so the C++ knows where to find them
 		
-		//if (mMainView == null) {
-			
-			Log.d ("lime", "mMainView is NULL");
-			
-			::foreach ndlls::
-			System.loadLibrary ("::name::");::end::
-			HXCPP.run ("ApplicationMain");
-			
-			//mMainView = new MainView (getApplication (), this);
-			
-		/*} else {
-			
-			ViewGroup parent = (ViewGroup)mMainView.getParent ();
-			
-			if (parent != null) {
-				
-				parent.removeView (mMainView);
-				
-			}
-			
-			mMainView.onResume ();
-			
-		}
+		::foreach ndlls::
+		System.loadLibrary ("::name::");
+		::end::
+		HXCPP.run ("ApplicationMain");
 		
-		mView = mMainView;*/
 		mView = new MainView (getApplication (), this);
 		setContentView (mView);
 
@@ -149,6 +134,8 @@ public class GameActivity extends Activity implements SensorEventListener {
 			sensorManager.registerListener (this, sensorManager.getDefaultSensor (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
 			
 		}
+
+		Extension.PACKAGE_NAME = getApplicationContext().getPackageName();
 		
 		if (extensions == null) {
 			
@@ -238,7 +225,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	
 	public void doPause () {
-		
+		isPaused = true;
 		_sound.doPause ();
 		
 		mView.sendActivity (Lime.DEACTIVATE);
@@ -254,7 +241,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	
 	public void doResume () {
-			
+		isPaused = false;
 		mView.onResume ();
 		
 		_sound.doResume ();
@@ -411,7 +398,19 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 	}
 	
+	@Override
+    protected void onNewIntent(final Intent intent) {
+		trace("onNewIntent");
+		for (Extension extension : extensions) {
+			extension.onNewIntent (intent);
+		}
+		super.onNewIntent (intent);
+    }
 	
+	@Override 
+	public void onBackPressed() {
+	}
+
 	@Override public void onAccuracyChanged (Sensor sensor, int accuracy) {
 		
 		
@@ -435,7 +434,21 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 	}
 	
+	@Override 
+	public boolean onKeyDown( int keyCode, KeyEvent event ){
+		if( mView.handleKeyDown( keyCode, event ) )
+			return true;
+		return super.onKeyDown(keyCode, event);
+	}
 	
+	@Override 
+	public boolean onKeyUp( int keyCode, KeyEvent event ){
+		if( mView.handleKeyUp( keyCode, event ) )
+			return true;
+		return super.onKeyUp(keyCode, event);
+	}
+	
+
 	@Override protected void onDestroy () {
 		
 		for (Extension extension : extensions) {
@@ -492,31 +505,21 @@ public class GameActivity extends Activity implements SensorEventListener {
 		
 	}
 	
-
-	@Override public void onLowMemory () {
-		
-		super.onLowMemory ();
-
-		for (Extension extension : extensions) {
-			
-			extension.onLowMemory ();
-			
-		}
-	}
-
-
-	@Override public void onTrimMemory (int level) {
-
-		super.onTrimMemory (level);
-
-		for (Extension extension : extensions) {
-			
-			extension.onTrimMemory (level);
-			
-		}
-
+	@Override 
+	public void onLowMemory() {
+		onTrimMemory ( ComponentCallbacks2.TRIM_MEMORY_COMPLETE );
 	}
 	
+	@Override
+	public void onTrimMemory( int level ){
+		if( !isPaused || level < ComponentCallbacks2.TRIM_MEMORY_MODERATE )
+			return;
+		
+		// we are in background
+		for (Extension extension : extensions) {
+			extension.onLowMemory ();
+		}
+	}
 	
 	@Override public void onSensorChanged (SensorEvent event) {
 		
