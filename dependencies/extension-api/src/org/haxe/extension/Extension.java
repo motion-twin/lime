@@ -19,7 +19,23 @@ public class Extension {
 	public static Context mainContext;
 	public static View mainView;
 	
+	public static String PACKAGE_NAME;
 	
+	public static byte[] getResource (String inResource) {
+		try {
+			InputStream inputStream = assetManager.open (inResource, AssetManager.ACCESS_BUFFER);
+			long length = inputStream.available ();
+			byte[] result = new byte[(int)length];
+			inputStream.read (result);
+			inputStream.close ();
+			return result;
+
+		} catch (IOException e) {
+			Log.e ("Extension",  "getResource" + ":" + e.toString ());
+		}
+		return null;
+	}
+
 	/**
 	 * Called when an activity you launched exits, giving you the requestCode 
 	 * you started it with, the resultCode it returned, and any additional data 
@@ -132,4 +148,12 @@ public class Extension {
 		
 		
 	}
+	
+	
+	/**
+	 * Called when the a new Intent is received
+	 */
+	public void onNewIntent (Intent intent) {
+	}
+	
 }

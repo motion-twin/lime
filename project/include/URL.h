@@ -36,6 +36,7 @@ struct URLRequest
    const char *contentType;
    ByteArray  postData;
    bool       debug;
+   bool       followRedirects;
    QuickVec<URLRequestHeader> headers; 
 };
 
@@ -54,7 +55,8 @@ class URLLoader : public Object
 		virtual int      getHttpCode()=0;
 		virtual const char *getErrorMessage()=0;
 		virtual ByteArray releaseData()=0;
-      virtual void     getCookies( std::vector<std::string> &outCookies )=0;
+		virtual void     getCookies( std::vector<std::string> &outCookies )=0;
+		std::vector<std::string> mResponseHeaders;
 };
 
 }

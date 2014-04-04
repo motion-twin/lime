@@ -10,11 +10,6 @@
 #define snprintf _snprintf
 #endif
 
-/**
- * TODO:
- * HTTP redirects
- */
-
 namespace lime
 {
 
@@ -74,9 +69,14 @@ public:
     /* send all data to this function  */ 
     curl_easy_setopt(mHandle, CURLOPT_WRITEFUNCTION, staticOnData);
     curl_easy_setopt(mHandle, CURLOPT_WRITEDATA, (void *)this);
-		curl_easy_setopt(mHandle, CURLOPT_NOPROGRESS, 0);
+	curl_easy_setopt(mHandle, CURLOPT_HEADERFUNCTION, staticOnHeader);
+ 	curl_easy_setopt(mHandle, CURLOPT_HEADERDATA, (void *)this);
+	curl_easy_setopt(mHandle, CURLOPT_NOPROGRESS, 0);
+	
+	if( r.followRedirects )
 		curl_easy_setopt(mHandle, CURLOPT_FOLLOWLOCATION, 1);
-    if (r.authType!=0)
+    
+	if (r.authType!=0)
     {
       curl_easy_setopt(mHandle, CURLOPT_HTTPAUTH, r.authType);
       if (r.credentials && r.credentials[0])
@@ -224,6 +224,18 @@ public:
 		}
 	}
 
+	size_t onHeader( void *inBuffer, size_t inItemSize, size_t inItems )
+ 	{
+ 	  size_t size = inItemSize*inItems;
+ 	  if (size>0)
+ 	  {
+ 		std::string s = "";
+         s.append((char *)inBuffer, size);
+ 		mResponseHeaders.push_back(s);
+ 	  }
+ 	  return size;
+ 	}
+
 	size_t onData( void *inBuffer, size_t inItemSize, size_t inItems)
 	{
 		size_t size = inItemSize*inItems;
@@ -257,6 +269,11 @@ public:
 		return ((CURLLoader *)userdata)->onData(inBuffer,size,inItems);
 	}
 
+	static size_t staticOnHeader( void *inBuffer, size_t size, size_t inItems, void *userdata)
+ 	{
+ 		return ((CURLLoader *)userdata)->onHeader(inBuffer,size,inItems);
+ 	}
+	
 	static size_t staticOnProgress(void* inCookie, double inBytesTotal, double inBytesDownloaded, 
                     double inUploadTotal, double inBytesUploaded)
 
