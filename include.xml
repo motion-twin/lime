@@ -7,7 +7,8 @@
 
 	<section unless="display">
 
-		<haxelib name="hxlibc" if="cpp" />
+		<haxelib name="hxcpp" if="cpp" />
+		<cpp build-library="hxcpp" />
 		
 		<ndll name="openal" register="false" if="android" />
 		
