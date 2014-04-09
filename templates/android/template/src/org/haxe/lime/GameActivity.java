@@ -400,7 +400,6 @@ public class GameActivity extends Activity implements SensorEventListener {
 	
 	@Override
     protected void onNewIntent(final Intent intent) {
-		trace("onNewIntent");
 		for (Extension extension : extensions) {
 			extension.onNewIntent (intent);
 		}

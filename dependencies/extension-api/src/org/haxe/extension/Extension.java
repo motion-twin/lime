@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Extension {
 	
@@ -31,7 +33,7 @@ public class Extension {
 			return result;
 
 		} catch (IOException e) {
-			Log.e ("Extension",  "getResource" + ":" + e.toString ());
+			//Log.e ("Extension",  "getResource" + ":" + e.toString ());
 		}
 		return null;
 	}
