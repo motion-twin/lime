@@ -326,7 +326,12 @@ public:
 				SDL_SetWindowPosition(mSDLWindow, sgWindowRect.x, sgWindowRect.y);
 				#endif
 			}
+
+			    //Make sure visible state remains as expected
+        	SDL_ShowCursor( mShowCursor );
+        	
 		}
+		
 	}
 
 
@@ -1109,6 +1114,9 @@ void ProcessEvent(SDL_Event &inEvent)
 				}
 				default: break;
 			}
+	   	    
+	   	    break;
+
 		}
 		case SDL_MOUSEMOTION:
 		{	
