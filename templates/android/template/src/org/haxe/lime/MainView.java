@@ -1,5 +1,7 @@
 package org.haxe.lime;
 
+//lime template
+
 
 import android.app.Activity;
 import android.content.Context;
@@ -204,7 +206,9 @@ class MainView extends GLSurfaceView {
 		setFocusableInTouchMode (true);
 		setRenderer (new Renderer (this));
 		setRenderMode (GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-		
+		::if (ANDROID_TARGET_SDK_VERSION > 11)::
+			setPreserveEGLContextOnPause(true);
+		::end::
 	}
 	
 	
