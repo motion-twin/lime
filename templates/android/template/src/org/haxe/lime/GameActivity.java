@@ -80,6 +80,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 	private Sound _sound;
 	
 	
+	
 	protected void onCreate (Bundle state) {
 		
 		super.onCreate (state);

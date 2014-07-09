@@ -20,6 +20,7 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGL;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
@@ -46,7 +47,8 @@ class MainView extends GLSurfaceView {
 	Runnable pollMe;
 	boolean renderPending = false;
 	
-	
+	public static EGL eglContext;
+
 	public MainView (Context context, Activity inActivity) {
 		
 		super (context);
@@ -64,7 +66,9 @@ class MainView extends GLSurfaceView {
 		
 		if (::WIN_ALLOW_SHADERS:: || ::WIN_REQUIRE_SHADERS::) {
 			
-			EGL10 egl = (EGL10)EGLContext.getEGL ();
+			EGL10 egl = (EGL10)EGLContext.getEGL();
+			eglContext = EGLContext.getEGL();
+			
 			EGLDisplay display = egl.eglGetDisplay (EGL10.EGL_DEFAULT_DISPLAY);
 			int[] version = new int[2];
 			
@@ -728,13 +732,25 @@ class MainView extends GLSurfaceView {
 		
 		public void onSurfaceCreated (GL10 gl, EGLConfig config) {
 			
+			
 			mMainView.isPollImminent = false;
 			mMainView.renderPending = false;
 			::if (DEBUG)::
 			Log.v("VIEW","onSurfaceCreated");
 			Log.v("VIEW", "Thread = " + java.lang.Thread.currentThread ().getId ());
 			::end::
-			mMainView.HandleResult (Lime.onContextLost ());
+			
+			if( eglContext!= gl ) {
+				::if (DEBUG)::
+				Log.v("VIEW","true context LOST");
+				::end::
+				mMainView.HandleResult (Lime.onContextLost ());
+			}
+			else{
+				::if (DEBUG)::
+				Log.v("VIEW","false context LOST");
+				::end::
+			}
 			
 		}
 		
