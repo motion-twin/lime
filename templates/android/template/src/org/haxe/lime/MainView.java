@@ -1,5 +1,5 @@
 package org.haxe.lime;
-
+//mine
 //lime template
 
 
@@ -99,7 +99,7 @@ class MainView extends GLSurfaceView {
 				EGLConfig[] configs = new EGLConfig[1];
 				int[] num_config = new int[1];
 				
-				if (::WIN_ANTIALIASING:: > 1) {
+				if (::WIN_ANTIALIASING:: >= 1) {
 					
 					int[] attrs = {
 						
