@@ -497,6 +497,13 @@ public class GameActivity extends Activity implements SensorEventListener {
 		}
 		
 	}
+
+	@Override protected void onSaveInstanceState (Bundle outState) {
+		super.onSaveInstanceState(outState);
+		for (Extension extension : extensions) {
+			extension.onSaveInstanceState (outState);
+		}
+	}
 	
 	
 	@Override public void onSensorChanged (SensorEvent event) {

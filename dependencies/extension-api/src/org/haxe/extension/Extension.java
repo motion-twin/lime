@@ -143,6 +143,15 @@ public class Extension {
 		
 		
 	}
+
+	/**
+	 * Called to retrieve per-instance state from an activity before being 
+	 * killed so that the state can be restored in onCreate
+	 */
+	public void onSaveInstanceState (Bundle outState) {
+
+	}
+
 	
 	
 }
