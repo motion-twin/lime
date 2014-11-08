@@ -80,6 +80,9 @@ public class GameActivity extends Activity implements SensorEventListener {
 	private Sound _sound;
 	
 	
+	@Override 
+	public void onBackPressed() {
+	}
 	
 	protected void onCreate (Bundle state) {
 		
