@@ -5,7 +5,9 @@ import haxe.Timer;
 import lime.app.Application;
 import lime.app.Config;
 import lime.audio.AudioManager;
+#if lime_console
 import lime.graphics.ConsoleRenderContext;
+#end
 import lime.graphics.GLRenderContext;
 import lime.graphics.RenderContext;
 import lime.graphics.Renderer;

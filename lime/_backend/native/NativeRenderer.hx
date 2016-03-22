@@ -2,12 +2,16 @@ package lime._backend.native;
 
 
 import haxe.io.Bytes;
+#if lime_cairo
 import lime.graphics.cairo.Cairo;
 import lime.graphics.cairo.CairoFormat;
 import lime.graphics.cairo.CairoImageSurface;
 import lime.graphics.cairo.CairoSurface;
 import lime.graphics.CairoRenderContext;
+#end
+#if lime_console
 import lime.graphics.ConsoleRenderContext;
+#end
 import lime.graphics.GLRenderContext;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
