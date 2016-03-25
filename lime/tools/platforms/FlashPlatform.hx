@@ -207,7 +207,7 @@ class FlashPlatform extends PlatformTarget {
 	
 	
 	public override function run ():Void {
-		
+		traceEnabled = true;
 		if (traceEnabled) {
 			
 			FlashHelper.enableLogging ();
@@ -228,6 +228,15 @@ class FlashPlatform extends PlatformTarget {
 				
 				targetPath = "index.html";
 				
+			}
+			
+			if (project.haxedefs.exists ("air")) {
+				
+				if( project.haxedefs.get ("air") == "" ) 
+					return Sys.println ("Error : in -air mode, you must define an air flag which specifies the air descriptor file");
+				targetPath = project.haxedefs.get("air");
+				
+				Sys.println("FIle to be launched: " + targetPath);
 			}
 			
 			if (traceEnabled) {
