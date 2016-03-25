@@ -207,7 +207,6 @@ class FlashPlatform extends PlatformTarget {
 	
 	
 	public override function run ():Void {
-		traceEnabled = true;
 		if (traceEnabled) {
 			
 			FlashHelper.enableLogging ();
