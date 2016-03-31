@@ -173,5 +173,18 @@ public class Extension {
 		
 	}
 	
+
+	public boolean onRequestPermissionsResult (int requestCode, String[] permissions, int[] grantResults ) {
+		return true;
+	}
+
+	public void onBackPressed() {
+	}
+
+	public void onSaveInstanceState (Bundle outState) {
+	}
+
+	public void onWindowFocusChanged (boolean hasFocus) {
+	}
 	
 }
