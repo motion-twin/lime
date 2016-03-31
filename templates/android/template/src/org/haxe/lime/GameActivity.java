@@ -271,10 +271,7 @@ public class GameActivity extends SDLActivity {
 		
 	}
 	
-    @Override public void onBackPressed() {
-    }
-
-	@Override public void onRequestPermissionsResult (int requestCode, String[] permissions, int[] grantResults ) {
+    @Override public void onRequestPermissionsResult (int requestCode, String[] permissions, int[] grantResults ) {
 		for (Extension extension : extensions) {
 			if (!extension.onRequestPermissionsResult (requestCode, permissions, grantResults)) {
 				return;
@@ -283,12 +280,4 @@ public class GameActivity extends SDLActivity {
 		super.onRequestPermissionsResult (requestCode, permissions, grantResults);
 	}
 
-    @Override protected void onSaveInstanceState (Bundle outState) {
-        super.onSaveInstanceState(outState);
-        
-        for (Extension extension : extensions) {
-            extension.onSaveInstanceState (outState);
-        }
-    }
-    
 }

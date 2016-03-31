@@ -178,12 +178,6 @@ public class Extension {
 		return true;
 	}
 
-	public void onBackPressed() {
-	}
-
-	public void onSaveInstanceState (Bundle outState) {
-	}
-
 	public void onWindowFocusChanged (boolean hasFocus) {
 	}
 	
