@@ -4,7 +4,7 @@ package lime.project;
 import haxe.rtti.Meta;
 import lime.tools.helpers.AssetHelper;
 import lime.tools.helpers.LogHelper;
-
+import lime.tools.helpers.CommandHelper;
 
 class PlatformTarget {
 	
@@ -58,8 +58,9 @@ class PlatformTarget {
 				project.config.set ("project.rebuild.path", null);
 				
 			}
-			
+			CommandHelper.executeCommands (project.preBuildCallbacks);
 			rebuild ();
+			CommandHelper.executeCommands (project.postBuildCallbacks);
 			
 		}
 		
@@ -67,6 +68,8 @@ class PlatformTarget {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: UPDATE" + LogHelper.resetColor);
 			AssetHelper.processLibraries (project, targetDirectory);
+			
+			LogHelper.info("We process update");
 			update ();
 			
 		}
@@ -74,7 +77,12 @@ class PlatformTarget {
 		if (!Reflect.hasField (metaFields.build, "ignore") && (command == "build" || command == "test")) {
 			
 			LogHelper.info ("", "\n" + LogHelper.accentColor + "Running command: BUILD" + LogHelper.resetColor);
+			
+			LogHelper.info("We process build");
 			build ();
+			
+			LogHelper.info("We process postbuild");
+			CommandHelper.executeCommands (project.postBuildCallbacks);
 			
 		}
 		

@@ -27,6 +27,11 @@ import sys.io.Process;
 #end
 
 
+typedef CLICommand = {
+	var command:String;
+	var args:Array<String>;
+}
+
 class HXProject {
 	
 	
@@ -74,6 +79,8 @@ class HXProject {
 	
 	private static var initialized:Bool;
 	
+	public var postBuildCallbacks:Array <CLICommand>;
+ 	public var preBuildCallbacks:Array <CLICommand>;
 	
 	public static function main () {
 		
@@ -122,6 +129,9 @@ class HXProject {
 		
 		platformType = PlatformType.DESKTOP;
 		architectures = [];
+		
+		postBuildCallbacks = [];
+ 		preBuildCallbacks = [];
 		
 		switch (target) {
 			
@@ -227,6 +237,8 @@ class HXProject {
 		ObjectHelper.copyFields (app, project.app);
 		project.architectures = architectures.copy ();
 		project.assets = assets.copy ();
+		project.preBuildCallbacks = preBuildCallbacks.copy();
+		project.postBuildCallbacks = postBuildCallbacks.copy();
 		
 		for (i in 0...assets.length) {
 			
@@ -714,6 +726,8 @@ class HXProject {
 			splashScreens = ArrayHelper.concatUnique (splashScreens, project.splashScreens);
 			templatePaths = ArrayHelper.concatUnique (templatePaths, project.templatePaths, true);
 			
+			preBuildCallbacks = preBuildCallbacks.concat(project.preBuildCallbacks);
+			postBuildCallbacks = postBuildCallbacks.concat(project.postBuildCallbacks);
 		}
 		
 	}

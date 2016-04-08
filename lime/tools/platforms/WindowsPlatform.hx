@@ -333,7 +333,7 @@ class WindowsPlatform extends PlatformTarget {
 		
 		for (asset in project.assets) {
 			
-			if (asset.embed != true) {
+			if ( !asset.embed ) {
 				
 				var path = PathHelper.combine (applicationDirectory, asset.targetPath);
 				

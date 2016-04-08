@@ -9,6 +9,7 @@ import lime.tools.helpers.ObjectHelper;
 import lime.tools.helpers.PathHelper;
 import lime.tools.helpers.PlatformHelper;
 import lime.tools.helpers.StringMapHelper;
+import lime.tools.helpers.CommandHelper;
 import lime.project.Asset;
 import lime.project.AssetType;
 import lime.project.Dependency;
@@ -158,7 +159,6 @@ class ProjectXMLParser extends HXProject {
 	private function isValidElement (element:Fast, section:String):Bool {
 		
 		if (element.x.get ("if") != null) {
-			
 			var value = element.x.get ("if");
 			var optionalDefines = value.split ("||");
 			var matchOptional = false;
@@ -199,7 +199,6 @@ class ProjectXMLParser extends HXProject {
 		}
 		
 		if (element.has.unless) {
-			
 			var value = substitute (element.att.unless);
 			var optionalDefines = value.split ("||");
 			var matchOptional = false;
@@ -238,7 +237,7 @@ class ProjectXMLParser extends HXProject {
 			
 		}
 		
-		if (section != "") {
+		if (section != null && section != "") {
 			
 			if (element.name != "section") {
 				
@@ -518,44 +517,10 @@ class ProjectXMLParser extends HXProject {
 					
 					include = substitute (element.att.include);
 					
-				} else {
+				} else {	
 					
-					//if (type == null) {
-						
 						include = "*";
 						
-					/*} else {
-						
-						switch (type) {
-							
-							case IMAGE:
-								
-								include = "*.jpg|*.jpeg|*.png|*.gif";
-							
-							case SOUND:
-								
-								include = "*.wav|*.ogg";
-							
-							case MUSIC:
-								
-								include = "*.mp2|*.mp3|*.ogg";
-							
-							case FONT:
-								
-								include = "*.otf|*.ttf";
-							
-							case TEMPLATE:
-								
-								include = "*";
-							
-							default:
-								
-								include = "*";
-							
-						}
-						
-					}*/
-					
 				}
 				
 				parseAssetsElementDirectory (path, targetPath, include, exclude, type, embed, glyphs, true);
@@ -1677,6 +1642,19 @@ class ProjectXMLParser extends HXProject {
 					case "config": 
 						
 						config.parse (element);
+						
+					case "prebuild":
+ 						
+ 						parseCommandElement (element, preBuildCallbacks);
+						
+						if (command == "test" || command == "build") {
+							CommandHelper.executeCommands(preBuildCallbacks);
+							preBuildCallbacks = [];
+						}
+						
+ 					case "postbuild":
+ 						
+ 						parseCommandElement (element, postBuildCallbacks);
 					
 					default :
 						
@@ -1694,6 +1672,60 @@ class ProjectXMLParser extends HXProject {
 		
 	}
 	
+	private function parseCommandElement (element:Fast, commandList:Array<CLICommand>):Void {
+ 		if( !isValidElement(element, "") ) 
+			return;
+		
+		var command:CLICommand = null;
+ 		
+ 		if (element.has.haxe) {
+ 			
+ 			command = CommandHelper.interpretHaxe (substitute (element.att.haxe));
+ 			
+ 		}
+ 		
+ 		if (element.has.open) {
+ 			
+ 			command = CommandHelper.openFile (substitute (element.att.open));
+ 			
+ 		}
+ 		
+ 		if (element.has.command) {
+ 			
+ 			command = CommandHelper.fromSingleString (substitute (element.att.command));
+ 			
+ 		}
+ 		
+ 		if (element.has.cmd) {
+ 			
+ 			command = CommandHelper.fromSingleString (substitute (element.att.cmd));
+ 			
+ 		}
+ 		
+ 		if (command != null) {
+ 			
+ 			for (arg in element.elements) {
+ 				
+ 				if (arg.name == "arg") {
+ 					
+ 					if( isValidElement(arg, "") )
+						command.args.push (arg.innerData);
+ 					
+ 				} else {
+					
+					LogHelper.error("Node " + arg + " isn't recognize");
+					
+				}
+ 				
+ 			}
+ 			
+			LogHelper.info("Command to be executed");
+			LogHelper.print(CommandHelper.toString(command));
+ 			commandList.push (command);
+ 			
+ 		}
+ 		
+ 	}
 	
 	private function parseWindowElement (element:Fast):Void {
 		
