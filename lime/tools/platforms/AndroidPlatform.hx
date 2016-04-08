@@ -234,7 +234,7 @@ class AndroidPlatform extends PlatformTarget {
 	
 	public override function trace ():Void {
 		
-		AndroidHelper.trace (project, project.debug, deviceID);
+		//AndroidHelper.trace (project, project.debug, deviceID);
 		
 	}
 	

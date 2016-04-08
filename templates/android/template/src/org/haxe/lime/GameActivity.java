@@ -265,19 +265,19 @@ public class GameActivity extends SDLActivity {
 		
 		super.onWindowFocusChanged (hasFocus);
 		
-		::if WIN_FULLSCREEN::::if (ANDROID_TARGET_SDK_VERSION >= 19)::
-		if (hasFocus) {
-			
-			if (Build.VERSION.SDK_INT >= 19) {
-				
-				getWindow ().getDecorView ().setSystemUiVisibility (View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-				
-			}
-			
+		for (Extension extension : extensions) {
+			extension.onWindowFocusChanged (hasFocus);
 		}
-		::end::::end::
 		
 	}
 	
-	
+    @Override public void onRequestPermissionsResult (int requestCode, String[] permissions, int[] grantResults ) {
+		for (Extension extension : extensions) {
+			if (!extension.onRequestPermissionsResult (requestCode, permissions, grantResults)) {
+				return;
+			}
+		}
+		super.onRequestPermissionsResult (requestCode, permissions, grantResults);
+	}
+
 }

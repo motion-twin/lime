@@ -173,5 +173,12 @@ public class Extension {
 		
 	}
 	
+
+	public boolean onRequestPermissionsResult (int requestCode, String[] permissions, int[] grantResults ) {
+		return true;
+	}
+
+	public void onWindowFocusChanged (boolean hasFocus) {
+	}
 	
 }

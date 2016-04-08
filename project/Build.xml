@@ -18,7 +18,7 @@
 	<set name="LIME_LZMA" value="1" />
 	<!-- <set name="LIME_NEKO" value="1" if="linux" /> -->
 	<set name="LIME_NFD" value="1" if="windows || mac" />
-	<set name="LIME_OGG" value="1" />
+	<set name="LIME_OGG" value="1" if="false" />
 	<set name="LIME_OPENAL" value="1" unless="static_link" />
 	<set name="LIME_OPENAL" value="1" if="iphone || android || emscripten || tvos" />
 	<set name="LIME_OPENGL" value="1" />
@@ -27,7 +27,7 @@
 	<set name="LIME_SDL" value="1" />
 	<!-- <set name="LIME_SDL_ANGLE" value="1" if="windows" unless="static_link" /> -->
 	<set name="LIME_SDL_ANGLE" value="1" if="windows LIME_SDL_ANGLE" unless="static_link" />
-	<set name="LIME_VORBIS" value="1" />
+	<set name="LIME_VORBIS" value="1" if="false" />
 	<set name="LIME_ZLIB" value="1" />
 	
 	<set name="OUTPUT_DIR" value="../ndll" unless="OUTPUT_DIR" />
@@ -239,22 +239,22 @@
 		
 	</files>
 	
-	<include name="lib/cairo/files.xml" />
-	<include name="lib/curl/files.xml" />
-	<include name="lib/freetype/files.xml" />
-	<include name="lib/harfbuzz/files.xml" />
-	<include name="lib/jpeg/files.xml" />
-	<include name="lib/lzma/files.xml" />
-	<include name="lib/neko/files.xml" />
-	<include name="lib/nfd/files.xml" />
-	<include name="lib/ogg/files.xml" />
-	<include name="lib/openal/files.xml" />
+	<include name="lib/cairo/files.xml" if="LIME_CAIRO" />
+	<include name="lib/curl/files.xml"  if="LIME_CURL" />
+	<include name="lib/freetype/files.xml"  if="LIME_FREETYPE" />
+	<include name="lib/harfbuzz/files.xml" if="LIME_HARFBUZZ" />
+	<include name="lib/jpeg/files.xml" if="LIME_JPEG" />
+	<include name="lib/lzma/files.xml" if="LIME_LZMA" />
+	<include name="lib/neko/files.xml" if="LIME_NEKO" />
+	<include name="lib/nfd/files.xml" if="LIME_NFD" />
+	<include name="lib/ogg/files.xml" if="LIME_OGG" />
+	<include name="lib/openal/files.xml" if="LIME_OPENAL" />
 	<include name="lib/openal-android/files.xml" if="android" />
-	<include name="lib/pixman/files.xml" />
-	<include name="lib/png/files.xml" />
-	<include name="lib/sdl/files.xml" />
-	<include name="lib/vorbis/files.xml" />
-	<include name="lib/zlib/files.xml" />
+	<include name="lib/pixman/files.xml" if="LIME_PIXMAN" />
+	<include name="lib/png/files.xml" if="LIME_PNG" />
+	<include name="lib/sdl/files.xml" if="LIME_SDL" />
+	<include name="lib/vorbis/files.xml" if="LIME_VORBIS" />
+	<include name="lib/zlib/files.xml" if="LIME_ZLIB" />
 	
 	<set name="DEBUGEXTRA" value="-debug" if="fulldebug" />
 	<set name="LIBSUFFIX" value="${HX_TARGET_SUFFIX}" if="HX_TARGET_SUFFIX" />
