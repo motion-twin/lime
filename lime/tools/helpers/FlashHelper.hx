@@ -945,6 +945,16 @@ class FlashHelper {
 				
 			}
 			
+			if (project.environment.exists ("ADL")) {
+				
+				player = project.environment.get ("ADL")+"/adl";
+				
+			} else {
+				
+				player = Sys.getEnv ("ADL")+"/adl";
+				
+			}
+			
 		}
 		
 		ProcessHelper.openFile (workingDirectory, targetPath, player);

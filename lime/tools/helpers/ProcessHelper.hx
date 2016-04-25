@@ -26,6 +26,7 @@ class ProcessHelper {
 			
 		}
 		
+		
 		if (PlatformHelper.hostPlatform == Platform.WINDOWS) {
 			
 			var args = [];
@@ -51,17 +52,17 @@ class ProcessHelper {
 			
 			if (executable == "") {
 				
-				executable = "/usr/bin/open";
+				executable = "/usr/bin/open -W";
 				
 			}
 			
 			if (targetPath.substr (0, 1) == "/") {
-				
-				runCommand (workingDirectory, executable, [ "-W", targetPath ]);
+				//-W
+				runCommand (workingDirectory, executable, [ "", targetPath ]);
 				
 			} else {
 				
-				runCommand (workingDirectory, executable, [ "-W", "./" + targetPath ]);
+				runCommand (workingDirectory, executable, [ "", "./" + targetPath ]);
 				
 			}
 			

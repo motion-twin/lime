@@ -681,7 +681,6 @@ namespace lime {
 			case GL_SAMPLE_BUFFERS:
 			case GL_SAMPLES:
 			case GL_SCISSOR_TEST:
-			case GL_SHADING_LANGUAGE_VERSION:
 			case GL_STENCIL_BACK_FAIL:
 			case GL_STENCIL_BACK_FUNC:
 			case GL_STENCIL_BACK_PASS_DEPTH_FAIL:
@@ -707,6 +706,7 @@ namespace lime {
 			case GL_VENDOR:
 			case GL_VERSION:
 			case GL_RENDERER:
+			case GL_SHADING_LANGUAGE_VERSION:
 				strings = 1;
 				break;
 			
